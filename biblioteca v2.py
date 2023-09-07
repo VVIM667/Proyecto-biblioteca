@@ -36,6 +36,55 @@ class Biblioteca:
         with open("biblioteca.csv", mode="a", newline='', encoding='utf-8') as file:
             escribir = csv.writer(file)
             escribir.writerow([libro.titulo, libro.autor, libro.genero, libro.anio_publicacion, libro.estado])
+    
+    def actualizar_csv(self):
+    # Abre el archivo CSV en modo escritura (borrando su contenido anterior)
+        with open("biblioteca.csv", mode="w", newline='', encoding='utf-8') as file:
+            escribir = csv.writer(file)
+            for libro in self.libros:
+                escribir.writerow([libro.titulo, libro.autor, libro.genero, libro.anio_publicacion, libro.estado])
+    
+    def modificar_libro(self, titulo_libro):
+        libro_encontrado = None
+        for libro in self.libros:
+            if libro.titulo.lower() == titulo_libro.lower():
+                opc = input("¿Qué deseas modificar?\n1. Título\n2. Autor\n3. Género\n4. Año de Publicación\n5. Estado\n0. Cancelar\nIngrese el número de la opción: ")
+                if opc == "1":
+                    nuevo_titulo = input("Nuevo título: ")
+                    libro.titulo = nuevo_titulo
+                elif opc == "2":
+                    nuevo_autor = input("Nuevo autor: ")
+                    libro.autor = nuevo_autor
+                elif opc == "3":
+                    nuevo_genero = input("Nuevo género: ")
+                    libro.genero = nuevo_genero
+                elif opc == "4":
+                    nuevo_anio = input("Nuevo año de publicación: ")
+                    libro.anio_publicacion = nuevo_anio
+                elif opc == "5":
+                    nuevo_estado = input("Nuevo estado (Disponible/Reservado): ")
+                    libro.estado = nuevo_estado
+                elif opc == "0":
+                    print("Modificación cancelada.")
+                    input("Presiona Enter para continuar...")
+                    return
+                else:
+                    print("Opción no válida.")
+                    input("Presiona Enter para continuar...")
+                    return
+
+                libro_encontrado = libro
+                break
+
+        if libro_encontrado is not None:
+            print("Registro modificado con éxito!")
+
+            # Ahora, actualiza el archivo CSV con los cambios
+            self.actualizar_csv()
+
+            input("Presiona Enter para continuar...")
+
+
 
     def mostrar_libros(self):
         if not self.libros:
@@ -72,6 +121,30 @@ class Biblioteca:
                 print(f"*AÑO DE PUBLICACION: {libro.anio_publicacion}")
                 print(f"ESTADO: {estado}")
                 print("---------------------------")
+    
+    def eliminar_libro(self, titulo_libro):
+        libro_encontrado = None
+        for libro in self.libros:
+            if libro.titulo.lower() == titulo_libro.lower():
+                opc = input("¿Estás seguro de querer eliminar? S/N: ")
+                if opc.lower() == "s":
+                    libro_encontrado = libro
+                    break
+                elif opc.lower() == "n":
+                    print("No se modificó ningún registro...")
+                    input("Presiona Enter para continuar...")
+                    return
+
+        if libro_encontrado is not None:
+            self.libros.remove(libro_encontrado)
+            print("Libro eliminado con éxito!")
+
+            # Ahora, actualiza el archivo CSV eliminando el libro
+            self.actualizar_csv()
+
+            input("Presiona Enter para continuar...")
+
+        
 
     def reservar_libros(self, titulo_libro):
         if not self.libros:
@@ -134,6 +207,8 @@ while True:
     print("3. BUSCAR LIBRO")
     print("4. RESERVAR LIBRO")
     print("5. CANCELAR RESERVACIÓN")
+    print("6. Eliminar")
+    print("7. Modificar")
     print("0. SALIR")
     
     opc = input("INGRESA EL NÚMERO DE LA OPCIÓN: ")
@@ -171,7 +246,20 @@ while True:
         titulo = input("INGRESA EL TÍTULO DEL LIBRO PARA CANCELAR LA RESERVACIÓN: ")
         objBiblioteca.cancelar_libro(titulo)
         input("PRESIONA ENTER PARA VOLVER AL MENÚ...")
+    
+    elif opc=="6":
+        clear_screen()
+        titulo = input("INGRESA EL TÍTULO DEL LIBRO PARA ELIMINAR: ")
+        objBiblioteca.eliminar_libro(titulo)
+    
+    elif opc=="7":
+        clear_screen()
+        titulo = input("INGRESA EL TÍTULO DEL LIBRO PARA MODIFICAR: ")
+        objBiblioteca.modificar_libro(titulo)
+
 
     elif opc == "0":
         input("PRESIONA ENTER PARA SALIR...") 
         break
+    
+
