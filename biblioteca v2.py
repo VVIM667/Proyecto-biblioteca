@@ -11,7 +11,7 @@ class Libro:
         self.estado = estado
 
 # Definición de la clase Biblioteca
-class Biblioteca:
+class Biblioteca: #cimentario
     def __init__(self):
         self.libros = []
         self.cargar_csv()
