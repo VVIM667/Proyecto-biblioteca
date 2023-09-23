@@ -258,7 +258,7 @@ while True:
         objBiblioteca.modificar_libro(titulo)
 
 
-    elif opc == "20":
+    elif opc == "0":
         input("PRESIONA ENTER PARA SALIR...") 
         break
     
