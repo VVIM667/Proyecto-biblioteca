@@ -1,9 +1,46 @@
 import tkinter as tk
 from tkinter import *
-import os
 import csv
 
+#CLASE LIBRO
+class Libro:
+    def __init__(self, titulo, autor, genero, anio_publicacion, estado):
+        self.titulo = titulo
+        self.autor = autor
+        self.genero = genero
+        self.anio_publicacion = anio_publicacion
+        self.estado = estado
 
+# Definición de la clase Biblioteca
+class Biblioteca: #cimentario
+    def __init__(self):
+        self.libros = []
+        self.cargar_csv()
+
+    def agregar_libro(self, libro):
+        self.libros.append(libro)
+        self.guardar_en_csv(libro)
+        print("\nLibro registrado con éxito.")
+
+    def cargar_csv(self):
+        try:
+            with open('biblioteca.csv', mode='r', newline='', encoding='utf-8') as file:
+                reader = csv.reader(file)
+                for row in reader:
+                    if len(row) == 5:
+                        libro = Libro(row[0], row[1], row[2], row[3], row[4])
+                        self.libros.append(libro)
+        except FileNotFoundError:
+            pass
+
+    def guardar_en_csv(self, libro):
+        with open("biblioteca.csv", mode="a", newline='', encoding='utf-8') as file:
+            escribir = csv.writer(file)
+            escribir.writerow([libro.titulo, libro.autor, libro.genero, libro.anio_publicacion, libro.estado])
+    
+
+# Crea una instancia de la biblioteca
+biblioteca = Biblioteca()
 #COLORES
 fondo_agregar="#e9d9d9"
 
@@ -26,6 +63,55 @@ def Addbook():
     window.resizable(width=False, height = False)
     fondo = tk.PhotoImage(file="Addb.png")
     fondo1 = tk.Label(window,image=fondo).place(x=0,y=0,relwidth=1,relheight=1)
+
+    def escribir_datos():
+      
+    # Obtén los datos ingresados por el usuario
+         titulo = entry_titulo.get()
+         autor = entry_autor.get()
+         genero = entry_genero.get()
+         anio_publicacion = entry_anio.get()
+         estado = "Disponible"
+
+    # Crea una instancia de la clase Libro
+         nuevo_libro = Libro(titulo, autor, genero, anio_publicacion, estado)
+
+    # Agrega el libro a la biblioteca y escribe los datos en el archivo CSV
+         biblioteca.agregar_libro(nuevo_libro)
+
+    # Limpia los campos de entrada después de escribir los datos
+         entry_titulo.delete(0, 'end')
+         entry_autor.delete(0, 'end')
+         entry_genero.delete(0, 'end')
+         entry_anio.delete(0, 'end')
+         
+
+    etiqueta_titulo = tk.Label(window, text="Título:")
+    etiqueta_titulo.place(x=350,y=200)
+    entry_titulo = tk.Entry(window)
+    entry_titulo.place(x=350,y=220)
+
+    etiqueta_autor = tk.Label(window, text="Autor:")
+    etiqueta_autor.place(x=350,y=250)
+    entry_autor = tk.Entry(window)
+    entry_autor.place(x=350,y=270)
+
+    etiqueta_genero = tk.Label(window, text="Género:")
+    etiqueta_genero.place(x=350,y=300)
+    entry_genero = tk.Entry(window)
+    entry_genero.place(x=350,y=320)
+
+    etiqueta_anio = tk.Label(window, text="Año de Publicación:")
+    etiqueta_anio.place(x=350,y=350)
+    entry_anio = tk.Entry(window)
+    entry_anio.place(x=350,y=370)
+
+    boton_escribir = tk.Button(window,text="Guardar datos", command=escribir_datos)
+    boton_escribir.place(x=350,y=410)
+
+
+
+    
     
 
     def regreso():
