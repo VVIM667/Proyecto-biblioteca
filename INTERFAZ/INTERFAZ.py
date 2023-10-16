@@ -32,6 +32,15 @@ class Biblioteca: #cimentario
                         self.libros.append(libro)
         except FileNotFoundError:
             pass
+    
+    def buscar_libros(self, criterio_busqueda):
+        libros_encontrados = []
+        for libro in self.libros:
+            if criterio_busqueda.lower() in libro.titulo.lower() or criterio_busqueda.lower() in libro.autor.lower() or criterio_busqueda.lower() in libro.genero.lower():
+                libros_encontrados.append(libro)
+
+        return libros_encontrados
+
 
     def guardar_en_csv(self, libro):
         with open("biblioteca.csv", mode="a", newline='', encoding='utf-8') as file:
@@ -170,12 +179,68 @@ def showbk():
 def searchb():
     ventana.withdraw()
     window2 = tk.Toplevel()
-    window2.title("Agregar")
+    window2.title("Buscar")
     window2.geometry("800x800+800+80")
     window2.resizable(width=False, height = False)
     fondo = tk.PhotoImage(file="srch.png")
     fondo1 = tk.Label(window2,image=fondo).place(x=0,y=0,relwidth=1,relheight=1)
+
+
+    etiqueta_titulo = tk.Label(window2, text="Busqueda:")
+    etiqueta_titulo.place(x=350,y=200)
+    entry_titulo = tk.Entry(window2)
+    entry_titulo.place(x=350,y=220)
+    busqueda = entry_titulo.get()
+
+    boton_escribir = tk.Button(window2,text="Guardar datos", command=escribir_datos)
+    boton_escribir.place(x=200,y=200)
+
+    #empieza la funcion
     
+    def escribir_datos():
+        libros_encontrados = biblioteca.buscar_libros(busqueda)
+        
+        window3 = tk.Toplevel()
+        window3.title("Buscar")
+        window3.geometry("800x800+800+80")
+        window3.resizable(width=False, height = False)
+        fondo = tk.PhotoImage(file="srch.png")
+        fondo1 = tk.Label(window2,image=fondo).place(x=0,y=0,relwidth=1,relheight=1)
+
+        lst = []
+        for libro in libros_encontrados:
+            titulo = libro.titulo
+            autor = libro.autor
+            genero = libro.genero
+            anio = libro.anio_publicacion
+            estado = libro.estado
+
+            tupla = (titulo,autor,genero,anio,estado)
+            lst.append(tupla)
+
+        total_rows = len(lst)
+        total_columns = len(lst[0])
+    
+        # create root window
+        
+        for i in range(total_rows):
+                for j in range(total_columns):
+                    
+                    e = Entry(window3, width=16, fg='black',
+                                font=('Arial',11,'bold'))
+                    
+                    e.grid(row=i, column=j)
+                    e.insert(END, lst[i][j])
+        
+        def regreso():
+            window3.withdraw()
+            window2.deiconify()
+
+        btnre3 = tk.Button(window3,text="Regresar",relief="flat",command=regreso, bg=fondo_agregar,font=("Comic Sans MS", 12, "bold"))
+        btnre3.place(x=350,y=600)
+
+        window3.mainloop()
+        
 
     def regreso():
         window2.withdraw()
@@ -185,6 +250,8 @@ def searchb():
     btnre.place(x=350,y=600)
     window2.mainloop()
 
+    
+    
 def reservb():
     ventana.withdraw()
     window2 = tk.Toplevel()
