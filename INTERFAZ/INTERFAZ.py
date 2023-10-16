@@ -125,12 +125,39 @@ def Addbook():
 def showbk():
     ventana.withdraw()
     window1 = tk.Toplevel()
-    window1.title("Agregar")
+    window1.title("Mostrar")
     window1.geometry("800x800+800+80")
     window1.resizable(width=False, height = False)
     fondo = tk.PhotoImage(file="showb.png")
     fondo1 = tk.Label(window1,image=fondo).place(x=0,y=0,relwidth=1,relheight=1)
     
+    lst = []
+    for libro in biblioteca.libros:
+        titulo = libro.titulo
+        autor = libro.autor
+        genero = libro.genero
+        anio = libro.anio_publicacion
+        estado = libro.estado
+
+        tupla = (titulo,autor,genero,anio,estado)
+        lst.append(tupla)
+
+  
+    # find total number of rows and
+    # columns in list
+    total_rows = len(lst)
+    total_columns = len(lst[0])
+  
+    # create root window
+    
+    for i in range(total_rows):
+            for j in range(total_columns):
+                 
+                e = Entry(window1, width=16, fg='black',
+                               font=('Arial',11,'bold'))
+                 
+                e.grid(row=i, column=j)
+                e.insert(END, lst[i][j])
 
     def regreso():
         window1.withdraw()
