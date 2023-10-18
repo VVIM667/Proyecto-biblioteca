@@ -13,7 +13,7 @@ class Libro:
         self.estado = estado
 
 # Definición de la clase Biblioteca
-class Biblioteca: #cimentario
+class Biblioteca: 
     def __init__(self):
         self.libros = []
         self.cargar_csv()
@@ -90,8 +90,34 @@ class Biblioteca: #cimentario
             separador = ttk.Separator(ventana_resultados, orient="horizontal")
             separador.pack(fill="x", padx=10, pady=5) 
 
+    def cancelar_libro(self, titulo_libro):
+        for libro in self.libros:
+            if libro.titulo.lower() == titulo_libro.lower():
+                if libro.estado == "Reservado":
+                    libro.estado = "Disponible"
+                    self.actualizar_csv()
+                    print(f"Libro '{libro.titulo}' Cancelado con éxito.")
+                    return
+        print(f"El libro '{titulo_libro}' esta disponible.")
 
     
+    def eliminar_libro(self, titulo_libro):
+
+        libro_encontrado = None
+        for libro in self.libros:
+            if libro.titulo.lower() == titulo_libro.lower():
+                opc = messagebox.askquestion("Eliminar Libro", "¿Estás seguro de querer eliminar este libro?", icon='warning')
+                if opc == "yes":
+                    libro_encontrado = libro
+                    break
+                elif opc == "no":
+                    messagebox.showinfo("Eliminación Cancelada", "No se modificó ningún registro.")
+                    return
+
+        if libro_encontrado is not None:
+            self.libros.remove(libro_encontrado)
+            messagebox.showinfo("Libro Eliminado", "El libro ha sido eliminado con éxito.")
+            self.actualizar_csv()
         
                 
                     
@@ -306,6 +332,21 @@ def cancelb():
     window2.resizable(width=False, height = False)
     fondo = tk.PhotoImage(file="cancel.png")
     fondo1 = tk.Label(window2,image=fondo).place(x=0,y=0,relwidth=1,relheight=1)
+
+    def cancelar():
+
+        titulo_libro = entry_cancelar.get()
+        biblioteca.cancelar_libro(titulo_libro)
+
+        entry_cancelar.delete(0, 'end')
+    
+    etiqueta_cancelar = tk.Label(window2,text="Titulo del Libro a cancelar")
+    etiqueta_cancelar.place(x=350,y=200)
+    entry_cancelar = tk.Entry(window2)
+    entry_cancelar.place(x=350,y=230)
+
+    boton_reservar = tk.Button(window2,text="Cancelar Libro",command=cancelar)
+    boton_reservar.place(x=350, y=260)
     
 
     def regreso():
@@ -324,6 +365,22 @@ def deleteb():
     window2.resizable(width=False, height = False)
     fondo = tk.PhotoImage(file="delet.png")
     fondo1 = tk.Label(window2,image=fondo).place(x=0,y=0,relwidth=1,relheight=1)
+
+
+    def eliminar():
+        
+        titulo_libro = entry_delete.get()
+        biblioteca.eliminar_libro(titulo_libro)
+        
+        entry_delete.delete(0,'end')
+
+    etiqueta_eliminar = tk.Label(window2,text="Titulo a eliminar")
+    etiqueta_eliminar.place(x=350,y=200)
+    entry_delete = tk.Entry(window2)
+    entry_delete.place(x=350,y=230)
+
+    boton_eliminar = tk.Button(window2, text="Eliminar", command=eliminar)
+    boton_eliminar.place(x=350,y=260)
     
 
     def regreso():
