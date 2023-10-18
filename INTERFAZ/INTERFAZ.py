@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import *
 import csv
+from tkinter import messagebox, ttk
 
 #CLASE LIBRO
 class Libro:
@@ -37,6 +38,65 @@ class Biblioteca: #cimentario
         with open("biblioteca.csv", mode="a", newline='', encoding='utf-8') as file:
             escribir = csv.writer(file)
             escribir.writerow([libro.titulo, libro.autor, libro.genero, libro.anio_publicacion, libro.estado])
+
+    def reservar_libro(self, titulo_libro):
+        for libro in self.libros:
+            if libro.titulo.lower() == titulo_libro.lower():
+                if libro.estado == "Disponible":
+                    libro.estado = "Reservado"
+                    self.actualizar_csv()
+                    print(f"Libro '{libro.titulo}' reservado con éxito.")
+                    return
+        print(f"El libro '{titulo_libro}' no se encuentra disponible para reserva.")
+
+    def actualizar_csv(self):
+        with open("biblioteca.csv", mode="w", newline='', encoding='utf-8') as file:
+            escribir = csv.writer(file)
+            for libro in self.libros:
+                escribir.writerow([libro.titulo, libro.autor, libro.genero, libro.anio_publicacion, libro.estado])
+
+    def buscar_libros(self, criterio_busqueda):
+        libros_encontrados = []
+        for libro in self.libros:
+            if criterio_busqueda.lower() in libro.titulo.lower() or criterio_busqueda.lower() in libro.autor.lower() or criterio_busqueda.lower() in libro.genero.lower():
+                libros_encontrados.append(libro)
+
+        if not libros_encontrados:
+            messagebox.showinfo("Búsqueda sin Resultados", "No se encontraron libros que coincidan con el criterio de búsqueda.")
+        
+        else:
+
+            ventana_resultados = tk.Toplevel()
+            ventana_resultados.title("Resultados de Búsqueda")
+
+        for libro in libros_encontrados:
+            estado = "Disponible" if libro.estado == "Disponible" else "Reservado"
+
+            etiqueta_titulo = tk.Label(ventana_resultados, text=f"Título: {libro.titulo}")
+            etiqueta_titulo.pack()
+
+            etiqueta_autor = tk.Label(ventana_resultados, text=f"Autor: {libro.autor}")
+            etiqueta_autor.pack()
+
+            etiqueta_genero = tk.Label(ventana_resultados, text=f"Género: {libro.genero}")
+            etiqueta_genero.pack()
+
+            etiqueta_anio = tk.Label(ventana_resultados, text=f"Año de Publicación: {libro.anio_publicacion}")
+            etiqueta_anio.pack()
+
+            etiqueta_estado = tk.Label(ventana_resultados, text=f"Estado: {estado}")
+            etiqueta_estado.pack()
+
+            separador = ttk.Separator(ventana_resultados, orient="horizontal")
+            separador.pack(fill="x", padx=10, pady=5) 
+
+
+    
+        
+                
+                    
+             
+           
     
 
 # Crea una instancia de la biblioteca
@@ -125,12 +185,13 @@ def Addbook():
 def showbk():
     ventana.withdraw()
     window1 = tk.Toplevel()
-    window1.title("Mostrar")
+    window1.title("Agregar")
     window1.geometry("800x800+800+80")
     window1.resizable(width=False, height = False)
     fondo = tk.PhotoImage(file="showb.png")
     fondo1 = tk.Label(window1,image=fondo).place(x=0,y=0,relwidth=1,relheight=1)
-    
+
+
     lst = []
     for libro in biblioteca.libros:
         titulo = libro.titulo
@@ -175,6 +236,22 @@ def searchb():
     window2.resizable(width=False, height = False)
     fondo = tk.PhotoImage(file="srch.png")
     fondo1 = tk.Label(window2,image=fondo).place(x=0,y=0,relwidth=1,relheight=1)
+
+    def buscar():
+        criterio_busqueda = entry_buscar.get().strip()
+        biblioteca.buscar_libros(criterio_busqueda)
+
+    etiqueta_busqueda = tk.Label(window2,text="Busqueda por Libro,Autor")
+    etiqueta_busqueda.place(x=350,y=200)
+    entry_buscar = tk.Entry(window2)
+    entry_buscar.place(x=350,y=230)
+
+    boton_buscar = tk.Button(window2,text="Buscar",command=buscar)
+    boton_buscar.place(x=350, y=260)
+
+    
+
+
     
 
     def regreso():
@@ -193,7 +270,25 @@ def reservb():
     window2.resizable(width=False, height = False)
     fondo = tk.PhotoImage(file="reser.png")
     fondo1 = tk.Label(window2,image=fondo).place(x=0,y=0,relwidth=1,relheight=1)
+
+    def reservar():
+
+        titulo_libro = entry_reservar.get()
+        biblioteca.reservar_libro(titulo_libro)
+
+        entry_reservar.delete(0, 'end')
     
+    etiqueta_reservar = tk.Label(window2,text="Titulo del Libro a reservar")
+    etiqueta_reservar.place(x=350,y=200)
+    entry_reservar = tk.Entry(window2)
+    entry_reservar.place(x=350,y=230)
+
+    boton_reservar = tk.Button(window2,text="Reservar Libro",command=reservar)
+    boton_reservar.place(x=350, y=260)
+
+    
+    
+
 
     def regreso():
         window2.withdraw()
