@@ -118,6 +118,56 @@ class Biblioteca:
             self.libros.remove(libro_encontrado)
             messagebox.showinfo("Libro Eliminado", "El libro ha sido eliminado con éxito.")
             self.actualizar_csv()
+
+    def modificar_libro(self, titulo_libro):
+        libro_encontrado = None
+        for libro in self.libros:
+            if libro.titulo.lower() == titulo_libro.lower():
+                libro_encontrado = libro
+                break  # Sal del bucle, ya que hemos encontrado el libro
+
+        if libro_encontrado is not None:
+            ventana_modificar = tk.Toplevel()
+            ventana_modificar.title("Modificar Libro")
+
+            etiqueta_opciones = tk.Label(ventana_modificar, text="¿Qué deseas modificar?")
+            etiqueta_opciones.pack()
+
+            opcion_var = tk.StringVar()
+            opciones = ["Título", "Autor", "Género", "Año de Publicación", "Estado"]
+            opcion_var.set(opciones[0])
+            menu_opciones = ttk.Combobox(ventana_modificar, textvariable=opcion_var, values=opciones)
+            menu_opciones.pack()
+
+            nuevo_valor = tk.StringVar()
+            entrada_nuevo_valor = tk.Entry(ventana_modificar, textvariable=nuevo_valor)
+            entrada_nuevo_valor.pack()
+
+            def aplicar_modificacion():
+                opcion_seleccionada = opcion_var.get()
+                valor_modificado = nuevo_valor.get()
+                if opcion_seleccionada == "Título":
+                    libro_encontrado.titulo = valor_modificado
+                elif opcion_seleccionada == "Autor":
+                    libro_encontrado.autor = valor_modificado
+                elif opcion_seleccionada == "Género":
+                    libro_encontrado.genero = valor_modificado
+                elif opcion_seleccionada == "Año de Publicación":
+                    libro_encontrado.anio_publicacion = valor_modificado
+                elif opcion_seleccionada == "Estado":
+                    libro_encontrado.estado = valor_modificado
+
+                ventana_modificar.destroy()  # Cierra la ventana de modificación
+
+                # Ahora, actualiza el archivo CSV con los cambios
+                self.actualizar_csv()
+                messagebox.showinfo("Modificación Exitosa", "El libro ha sido modificado con éxito.")
+
+            boton_aplicar = tk.Button(ventana_modificar, text="Aplicar Modificación", command=aplicar_modificacion)
+            boton_aplicar.pack()
+
+            ventana_modificar.mainloop()
+
         
                 
                     
@@ -136,6 +186,7 @@ ventana.geometry("800x800+800+80")
 ventana.resizable(width=False, height = False)
 fondo = tk.PhotoImage(file="Fondo.png")
 fondo1 = tk.Label(ventana, image=fondo).place(x=0,y=0,relwidth=1,relheight=1)
+
 
 
 
@@ -399,6 +450,22 @@ def modifyb():
     window2.resizable(width=False, height = False)
     fondo = tk.PhotoImage(file="mod.png")
     fondo1 = tk.Label(window2,image=fondo).place(x=0,y=0,relwidth=1,relheight=1)
+
+
+    def modificar():
+        titulo_libro = entry_modificar.get()
+        biblioteca.modificar_libro(titulo_libro)
+
+    etiqueta_modificar = tk.Label(window2,text="Titulo a modificar")
+    etiqueta_modificar.place(x=350,y=200)
+    entry_modificar = tk.Entry(window2)
+    entry_modificar.place(x=350,y=230)
+
+    boton_eliminar = tk.Button(window2, text="Eliminar", command=modificar)
+    boton_eliminar.place(x=350,y=260)
+
+    
+
     
 
     def regreso():
