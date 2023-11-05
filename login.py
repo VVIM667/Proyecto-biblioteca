@@ -7,7 +7,8 @@ from pathlib import Path
 
 # from tkinter import *
 # Explicit imports to satisfy Flake8
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, messagebox
+import subprocess
 
 
 OUTPUT_PATH = Path(__file__).parent
@@ -17,7 +18,16 @@ ASSETS_PATH = OUTPUT_PATH / Path(r"assets\frame0")
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
-
+def verificar_usuario():
+    usuario=entry_1.get()
+    contraseña=entry_2.get()
+    if usuario == 'admin' and contraseña == '12345':
+        window.destroy()
+        messagebox.showinfo("Titulo","Bienvenido al programa")
+        subprocess.run(['python', 'principal.py'])
+        
+    else:
+        messagebox.showerror("Error", "Usuario o contraseña incorrectos")
 window = Tk()
 
 window.geometry("700x550")
@@ -121,7 +131,7 @@ button_1 = Button(
     image=button_image_1,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: print("button_1 clicked"),
+    command=verificar_usuario,
     relief="flat"
 )
 button_1.place(
