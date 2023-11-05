@@ -22,6 +22,7 @@ window = Tk()
 
 window.geometry("700x550")
 window.configure(bg = "#EBEBC3")
+fuente=("Righteous Regular", 25)
 
 
 canvas = Canvas(
@@ -80,8 +81,10 @@ entry_bg_1 = canvas.create_image(
 entry_1 = Entry(
     bd=0,
     bg="#F2DD88",
-    fg="#000716",
-    highlightthickness=0
+    fg="#947A1F",
+    highlightthickness=0,
+    font=fuente,
+    justify="center"
 )
 entry_1.place(
     x=219.0,
@@ -100,8 +103,10 @@ entry_bg_2 = canvas.create_image(
 entry_2 = Entry(
     bd=0,
     bg="#F2DD88",
-    fg="#000716",
-    highlightthickness=0
+    fg="#947A1F",
+    highlightthickness=0,
+    font=fuente,
+    justify="center"
 )
 entry_2.place(
     x=219.0,
