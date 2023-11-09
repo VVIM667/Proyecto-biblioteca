@@ -23,7 +23,6 @@ def verificar_usuario():
     contraseña=entry_2.get()
     if usuario == 'admin' and contraseña == '12345':
         window.destroy()
-        messagebox.showinfo("Titulo","Bienvenido al programa")
         subprocess.Popen('python principal.py', shell=True)
         
     else:
@@ -32,8 +31,9 @@ window = Tk()
 
 window.geometry("700x550")
 window.configure(bg = "#EBEBC3")
+window.iconbitmap("icono.ico")
 fuente=("Righteous Regular", 25)
-
+window.title("Iniciar sesión")
 
 canvas = Canvas(
     window,
@@ -116,7 +116,8 @@ entry_2 = Entry(
     fg="#947A1F",
     highlightthickness=0,
     font=fuente,
-    justify="center"
+    justify="center",
+    show="*"
 )
 entry_2.place(
     x=219.0,
